@@ -54,7 +54,7 @@ public class Controlador implements ActionListener {
                 JOptionPane.showMessageDialog(null, "No se inserto el registro");
             }
         }
-        if (e.getSource() == vista.btnModificar) {
+        else if (e.getSource() == vista.btnModificar) {
             estudiante.setNombre(vista.txtNombre.getText());
             estudiante.setNota(Double.parseDouble(vista.txtNota.getText()));
             estudiante.setGenero(vista.cbGenero.getSelectedItem().toString());
@@ -67,7 +67,7 @@ public class Controlador implements ActionListener {
                 JOptionPane.showMessageDialog(null, "No se pudo modificar");
             }
         }
-        if (e.getSource() == vista.btnEliminar) {
+        else if (e.getSource() == vista.btnEliminar) {
 
             estudiante.setCodigo(Integer.parseInt(vista.txtBuscar.getText()));
             if (modelo.eliminar(estudiante)) {
@@ -77,7 +77,7 @@ public class Controlador implements ActionListener {
                 JOptionPane.showMessageDialog(null, "No se encontro el registro");
             }
         }
-        if (e.getSource() == vista.btnBuscar) {
+        else if (e.getSource() == vista.btnBuscar) {
             estudiante.setCodigo(Integer.parseInt(vista.txtBuscar.getText()));
             if (modelo.buscar(estudiante)) {
 
@@ -92,29 +92,33 @@ public class Controlador implements ActionListener {
             }
 
         }
-        if (e.getSource() == vista.btnLimpiar) {
+        else if (e.getSource() == vista.btnLimpiar) {
             limpiar();
         }
 
-        if (e.getSource() == vista.btnSiguiente) {
+        else if (e.getSource() == vista.btnSiguiente) {
 
-            modelo.siguiente(estudiante);
-
+            if(modelo.siguiente(estudiante)){
+            
             vista.txtNombre.setText(estudiante.getNombre());
             vista.cbMateria.setSelectedItem(estudiante.getMateria());
             vista.cbGenero.setSelectedItem(estudiante.getGenero());
             vista.txtNota.setText(String.valueOf(estudiante.getNota()));
 
-//            
+            }
+                 
         }
 
-        if (e.getSource() == vista.btnAnterior) {
-            modelo.anterior(estudiante);
+        else if (e.getSource() == vista.btnAnterior) {
+           
+            if(modelo.anterior(estudiante)){
+            
             vista.txtNombre.setText(estudiante.getNombre());
             vista.cbMateria.setSelectedItem(estudiante.getMateria());
             vista.cbGenero.setSelectedItem(estudiante.getGenero());
             vista.txtNota.setText(String.valueOf(estudiante.getNota()));
 
+            }
         }
     }
 }

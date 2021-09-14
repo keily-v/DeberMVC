@@ -11,21 +11,7 @@ public class TransaccionesBD extends Conexion {
     PreparedStatement ps;
     ResultSet rs;
     Estudiante estudiante;
-
-    private boolean cargarDatos(Estudiante estudiante) {
-
-        try {
-            Connection conexion = getConnection();
-            ps = conexion.prepareStatement("select * from estudiante", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            rs = ps.executeQuery();
-            rs.next();
-            llenaTabla(estudiante);
-            
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "No existen mas estudiantes");
-        }
-return true;
-    }
+    boolean adelante, atras;
 
     private boolean llenaTabla(Estudiante estudiante) {
         try {
@@ -33,7 +19,7 @@ return true;
             estudiante.setMateria(rs.getString(5));
             estudiante.setGenero(rs.getString(4));
             estudiante.setNota(Double.parseDouble(rs.getString(3)));
-            
+
         } catch (Exception ex) {
             System.err.println("error datossss");
         }
@@ -112,19 +98,25 @@ return true;
     }
 
     public boolean siguiente(Estudiante estudiante) {
-      
+
         try {
-            Connection conexion = getConnection();
-            ps = conexion.prepareStatement("select * from estudiante", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            rs = ps.executeQuery();
-           
-            rs.first();
-            llenaTabla(estudiante);
-            
-            
-            
+            atras = false;
+
+            if (adelante == false) {
+                Connection conexion = getConnection();
+                ps = conexion.prepareStatement("select * from estudiante");
+                rs = ps.executeQuery();
+                adelante = true;
+
+            }
+            if (rs.isLast() == false) {
+                rs.next();
+                llenaTabla(estudiante);
+            }
+
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "No existen mas estudiantes");
+            System.err.println("Error" + ex);
+
         }
 
         return true;
@@ -134,20 +126,28 @@ return true;
     public boolean anterior(Estudiante estudiante) {
 
         try {
-            Connection conexion = getConnection();
-            ps = conexion.prepareStatement("select * from estudiante", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            rs = ps.executeQuery();
-            while(rs.next()){
-            
-            llenaTabla(estudiante);
-            }
-            
-            
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Ha llegado al inicio de la lista");
-        }
-        return true;
+            adelante = false;
 
+            if (atras == false) {
+                Connection conexion = getConnection();
+
+                ps = conexion.prepareStatement("select * from estudiante", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+                rs = ps.executeQuery("select * from estudiante order by codigoE desc ");
+                atras = true;
+
+            }
+            if (rs.isLast() == false) {
+                rs.next();
+                llenaTabla(estudiante);
+            }
+
+        } catch (Exception ex) {
+            System.err.println("Error" + ex);
+
+        }
+
+        return true;
     }
 
     public boolean buscar(Estudiante estudiante) {
